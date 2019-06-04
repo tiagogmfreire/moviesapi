@@ -10,6 +10,13 @@ use App\Services\MovieService;
  */
 class MovieController extends Controller
 {
+    public function upcoming(Request $request, MovieService $movieService)
+    {
+        $movies = $movieService->upcoming();
+
+        return $movies;
+    }
+
     /**
      * Action for the API endpoint that shows the details
      * of a particular movie by it's TMDb id.
