@@ -25,9 +25,22 @@ class MovieService
             ]]);
 
             $statusCode = $response->getStatusCode();
-            $movies =  $response->getBody();
+            
+            $movies = json_decode($response->getBody(), true);;
 
-            return $movies;
+            $movieList = [];
+
+            foreach ($movies['results'] as $i => $movie) {
+                $movieList[$i] = [];
+
+                $movieList[$i]['id'] = $movie['id'];
+                $movieList[$i]['title'] = $movie['title'];
+                $movieList[$i]['release_date'] = $movie['release_date'];
+                $movieList[$i]['poster_path'] = $movie['poster_path'];
+                $movieList[$i]['backdrop_path'] = $movie['backdrop_path'];                
+            }
+            
+            return $movieList;
 
         }  catch (\Exception $e) {
             throw $e;
