@@ -11,6 +11,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
+$router
+->get('/', function () use ($router) {
     return $router->app->version();
-});
+})
+->get('/movie/{id}',['uses' => 'MovieController@movie']);
