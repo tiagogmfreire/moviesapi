@@ -13,19 +13,25 @@ class MovieService
 {
     public function upcoming()
     {
-        $url = env('TMDB_API');
+        try {
 
-        $endpoint = $url . "/movie/upcoming";
-        $client = new Client();
-        
-        $response = $client->request('GET', $endpoint, ['query' => [
-            'api_key' => env('TMDB_KEY')
-        ]]);
+            $url = env('TMDB_API');
 
-        $statusCode = $response->getStatusCode();
-        $movies =  $response->getBody();
+            $endpoint = $url . "/movie/upcoming";
+            $client = new Client();
+            
+            $response = $client->request('GET', $endpoint, ['query' => [
+                'api_key' => env('TMDB_KEY')
+            ]]);
 
-        return $movies;
+            $statusCode = $response->getStatusCode();
+            $movies =  $response->getBody();
+
+            return $movies;
+
+        }  catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     public function search(string $title)
