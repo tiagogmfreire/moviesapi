@@ -15,6 +15,8 @@ class MovieService
     {
         try {
 
+            $genres = $this->genres();
+
             $url = env('TMDB_API');
 
             $endpoint = $url . "/movie/upcoming";
@@ -26,7 +28,7 @@ class MovieService
 
             $statusCode = $response->getStatusCode();
             
-            $movies = json_decode($response->getBody(), true);;
+            $movies = json_decode($response->getBody(), true);
 
             $movieList = [];
 
@@ -40,7 +42,35 @@ class MovieService
                 $movieList[$i]['backdrop_path'] = $movie['backdrop_path'];                
             }
             
-            return $movieList;
+            return $genres;
+
+        }  catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function genres()
+    {
+        try {
+
+            $url = env('TMDB_API');
+
+            $endpoint = $url . "/genre/movie/list";
+            $client = new Client();
+            
+            $response = $client->request('GET', $endpoint, ['query' => [
+                'api_key' => env('TMDB_KEY')
+            ]]);
+
+            $statusCode = $response->getStatusCode();
+            
+            $genres = json_decode($response->getBody(), true);
+
+            if (isset($genres['genres'])) {
+                $genres = $genres['genres'];
+            }
+                       
+            return $genres;
 
         }  catch (\Exception $e) {
             throw $e;
