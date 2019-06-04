@@ -12,9 +12,15 @@ class MovieController extends Controller
 {
     public function upcoming(Request $request, MovieService $movieService)
     {
-        $movies = $movieService->upcoming();
+        try {
+            $movies = $movieService->upcoming();
 
-        return $movies;
+            return $movies;
+
+        } catch (\Exception $e) {
+            
+            return response()->json('An error has ocorred while processing your request', 500);
+        }
     }
 
     /**

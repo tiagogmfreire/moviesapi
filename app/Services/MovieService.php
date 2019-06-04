@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use \GuzzleHttp\Client;
+use function GuzzleHttp\json_decode;
 
 /**
  * Service class to abstract logic regarding retrieving movie information
@@ -21,7 +22,10 @@ class MovieService
             'api_key' => env('TMDB_KEY')
         ]]);
 
-        return $response;
+        $statusCode = $response->getStatusCode();
+        $movies =  $response->getBody();
+
+        return $movies;
     }
 
     public function search(string $title)
