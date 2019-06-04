@@ -97,4 +97,7 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+//registering Lumen Generator commands
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
 return $app;
