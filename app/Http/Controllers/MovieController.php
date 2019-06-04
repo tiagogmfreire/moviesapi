@@ -21,7 +21,8 @@ class MovieController extends Controller
      */
     public function movie($id, Request $request, MovieService $movieService)
     {
+        $movie = $movieService->getDetails($id);
         
-        return $id;
+        return $movie;
     }
 }
