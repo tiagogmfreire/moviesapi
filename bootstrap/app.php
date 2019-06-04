@@ -23,7 +23,8 @@ $app = new Laravel\Lumen\Application(
 
 // $app->withFacades();
 
-// $app->withEloquent();
+//enabling eloquent ORM
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
