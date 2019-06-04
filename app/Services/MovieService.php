@@ -15,7 +15,7 @@ class MovieService
     {
         try {
 
-            $genres = $this->genres();
+            $genreList = $this->getGenreDictionary();
 
             $url = env('TMDB_API');
 
@@ -39,10 +39,16 @@ class MovieService
                 $movieList[$i]['title'] = $movie['title'];
                 $movieList[$i]['release_date'] = $movie['release_date'];
                 $movieList[$i]['poster_path'] = $movie['poster_path'];
-                $movieList[$i]['backdrop_path'] = $movie['backdrop_path'];                
+                $movieList[$i]['backdrop_path'] = $movie['backdrop_path']; 
+
+                foreach ($movie['genre_ids'] as $j => $genre) {
+
+                    $movieList[$i]['genres'][$j]['id'] = $genre;
+                    $movieList[$i]['genres'][$j]['name'] = $genreList[$genre];
+                }
             }
             
-            return $genres;
+            return $movieList;
 
         }  catch (\Exception $e) {
             throw $e;
@@ -75,6 +81,20 @@ class MovieService
         }  catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function getGenreDictionary()
+    {
+        $genres = $this->genres();
+
+        $genreList = [];
+
+        foreach ($genres as $genre) {
+
+            $genreList[$genre['id']] = $genre['name'];
+        }
+
+        return $genreList;
     }
 
     public function search(string $title)
