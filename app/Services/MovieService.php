@@ -104,15 +104,36 @@ class MovieService
 
     public function getDetails($id)
     {
-        $endpoint = "https://api.themoviedb.org/3/movie/upcoming";
-        $client = new \GuzzleHttp\Client();
-        //$id = 5;
-        //$value = "ABC";
+        try {
 
-        $response = $client->request('GET', $endpoint, ['query' => [
-            'api_key' => '1f54bd990f1cdfb230adb312546d765d'
-        ]]);
+            $genreList = $this->getGenreDictionary();
 
-        return $response;
+            $url = env('TMDB_API');
+
+            $endpoint = $url . "/movie/" . $id;
+            $client = new Client();
+            
+            $response = $client->request('GET', $endpoint, ['query' => [
+                'api_key' => env('TMDB_KEY')
+            ]]);
+
+            $statusCode = $response->getStatusCode();
+            
+            $movieResponse = json_decode($response->getBody(), true);
+
+            $movie = [];
+            $movie['id'] = $movieResponse['id'];
+            $movie['imdb_id'] = $movieResponse['imdb_id'];
+            $movie['title'] = $movieResponse['title'];
+            $movie['release_date'] = $movieResponse['release_date'];
+            $movie['overview'] = $movieResponse['overview'];
+            $movie['poster_path'] = $movieResponse['poster_path'];
+            $movie['genres'] = $movieResponse['genres'];
+            
+            return $movie;
+
+        }  catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

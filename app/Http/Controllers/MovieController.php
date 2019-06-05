@@ -34,8 +34,18 @@ class MovieController extends Controller
      */
     public function movie($id, Request $request, MovieService $movieService)
     {
-        $movie = $movieService->getDetails($id);
+        try {
+
+            $movie = $movieService->getDetails($id);
         
-        return $movie;
+            return $movie;
+
+
+        } catch (\Exception $e) {
+
+            return response()->json('An error has ocorred while processing your request', 500);
+        }
+
+        
     }
 }
