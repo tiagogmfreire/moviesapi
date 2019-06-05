@@ -11,6 +11,18 @@ use function GuzzleHttp\json_decode;
  */
 class MovieService
 {
+    /**
+     * Method to get a list of the upcoming movies. 
+     * 
+     * It uses the /movie/upcoming endpoint of the TMDb API.
+     * 
+     * The response of the service is passed is decoded from json and passed as an array 
+     * to the formatMovieList() method to rearrange the array containing the movie objects.
+     *
+     * @param integer $page (optional)The page number. Default: 1.
+     * 
+     * @return array  an array containg the movies found
+     */
     public function upcoming($page = 1)
     {
         try {
@@ -38,6 +50,11 @@ class MovieService
         }
     }
 
+    /**
+     * Method to get an array of movie genres from the TMDb API.
+     *
+     * @return array an array containg all the genres returned
+     */
     public function genres()
     {
         try {
@@ -66,6 +83,12 @@ class MovieService
         }
     }
 
+    /**
+     * Method to rearrange the array of genres into an associative
+     * array indexed by the genre's id
+     *
+     * @return void the rearrenged array
+     */
     public function getGenreDictionary()
     {
         $genres = $this->genres();
@@ -80,7 +103,19 @@ class MovieService
         return $genreList;
     }
 
-    public function search($title, $page = 1 ,$adult = false)
+    /**
+     * Method to search for a movie by it's title using the /search/movie TMDb API endpoint.
+     *
+     * The response of the service is passed is decoded from json and passed as an array 
+     * to the formatMovieList() method to rearrange the array containing the movie objects.
+     * 
+     * @param string    $title  The movie's title used in the search
+     * @param integer   $page   (optional)The page number. Default: 1
+     * @param boolean   $adult  (optional)An flag to show adult content. Default: false.
+     * 
+     * @return void
+     */
+    public function search($title, $page = 1 , $adult = false)
     {
         try {
 
@@ -109,6 +144,12 @@ class MovieService
         }
     }
 
+    /**
+     * Method to get the details of a movie by it's id using the TMDb API /movie/{id} endpoint.
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function getDetails($id)
     {
         try {
@@ -144,6 +185,18 @@ class MovieService
         }
     }
 
+    /**
+     * An method to format an array contaning a list of movies.
+     * 
+     * uses the method getGenreDictionary() to get the genres names 
+     * by id.
+     * 
+     * filters information not used by the app.
+     *
+     * @param [type] $movies
+     * 
+     * @return array An array containg the treated information of the movies
+     */
     public function formatMovieList($movies)
     {
         $genreList = $this->getGenreDictionary();
