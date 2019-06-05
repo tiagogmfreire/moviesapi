@@ -11,7 +11,7 @@ use function GuzzleHttp\json_decode;
  */
 class MovieService
 {
-    public function upcoming()
+    public function upcoming($page = 1)
     {
         try {
 
@@ -21,7 +21,8 @@ class MovieService
             $client = new Client();
             
             $response = $client->request('GET', $endpoint, ['query' => [
-                'api_key' => env('TMDB_KEY')
+                'api_key' => env('TMDB_KEY'),
+                'page' => $page,
             ]]);
 
             $statusCode = $response->getStatusCode();
@@ -79,7 +80,7 @@ class MovieService
         return $genreList;
     }
 
-    public function search($title, $adult = false)
+    public function search($title, $page = 1 ,$adult = false)
     {
         try {
 
@@ -91,6 +92,7 @@ class MovieService
             $response = $client->request('GET', $endpoint, ['query' => [
                 'api_key' => env('TMDB_KEY'),
                 'query' => $title,
+                'page' => $page,
                 'include_adult' => $adult
             ]]);
 

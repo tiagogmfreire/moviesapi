@@ -13,7 +13,12 @@ class MovieController extends Controller
     public function upcoming(Request $request, MovieService $movieService)
     {
         try {
-            $movies = $movieService->upcoming();
+
+            $page = $request->input('page');
+
+            $page = $page ?? 1;
+
+            $movies = $movieService->upcoming($page);
 
             return response()->json($movies);
 
@@ -52,8 +57,11 @@ class MovieController extends Controller
         try {
 
             $title = $request->input('title');
+            $page = $request->input('page');
 
-            $movie = $movieService->search($title);
+            $page = $page ?? 1;
+
+            $movie = $movieService->search($title, $page);
 
             return response()->json($movie);
 
