@@ -16,5 +16,6 @@ $router
     return $router->app->version();
 })
 ->get('/movie/{id}',['uses' => 'MovieController@movie'])
-->get('/upcoming',['uses' => 'MovieController@upcoming'])
+->get('/movie/upcoming',['uses' => 'MovieController@upcoming'])
+->get('/movie/search',['uses' => 'MovieController@search'])
 ;
