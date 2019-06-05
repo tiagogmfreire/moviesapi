@@ -15,7 +15,7 @@ class MovieController extends Controller
         try {
             $movies = $movieService->upcoming();
 
-            return $movies;
+            return response()->json($movies);
 
         } catch (\Exception $e) {
             
@@ -38,7 +38,7 @@ class MovieController extends Controller
 
             $movie = $movieService->getDetails($id);
         
-            return $movie;
+            return response()->json($movie);
 
 
         } catch (\Exception $e) {
