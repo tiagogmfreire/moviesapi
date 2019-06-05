@@ -44,8 +44,22 @@ class MovieController extends Controller
         } catch (\Exception $e) {
 
             return response()->json('An error has ocorred while processing your request', 500);
-        }
+        }        
+    }
 
-        
+    public function search (Request $request, MovieService $movieService)
+    {
+        try {
+
+            $title = $request->input('title');
+
+            $movie = $movieService->search($title);
+
+            return response()->json($movie);
+
+        } catch (\Exception $e) {
+
+            return response()->json('An error has ocorred while processing your request', 500);
+        }
     }
 }
