@@ -79,7 +79,7 @@ class MovieService
         return $genreList;
     }
 
-    public function search($title)
+    public function search($title, $adult = false)
     {
         try {
 
@@ -90,7 +90,8 @@ class MovieService
             
             $response = $client->request('GET', $endpoint, ['query' => [
                 'api_key' => env('TMDB_KEY'),
-                'query' => $title
+                'query' => $title,
+                'include_adult' => $adult
             ]]);
 
             $statusCode = $response->getStatusCode();
