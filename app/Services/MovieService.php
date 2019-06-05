@@ -15,8 +15,6 @@ class MovieService
     {
         try {
 
-            $genreList = $this->getGenreDictionary();
-
             $url = env('TMDB_API');
 
             $endpoint = $url . "/movie/upcoming";
@@ -30,25 +28,9 @@ class MovieService
             
             $movies = json_decode($response->getBody(), true);
 
-            $movieList = [];
-
-            foreach ($movies['results'] as $i => $movie) {
-                $movieList[$i] = [];
-
-                $movieList[$i]['id'] = $movie['id'];
-                $movieList[$i]['title'] = $movie['title'];
-                $movieList[$i]['release_date'] = $movie['release_date'];
-                $movieList[$i]['poster_path'] = $movie['poster_path'];
-                $movieList[$i]['backdrop_path'] = $movie['backdrop_path']; 
-
-                foreach ($movie['genre_ids'] as $j => $genre) {
-
-                    $movieList[$i]['genres'][$j]['id'] = $genre;
-                    $movieList[$i]['genres'][$j]['name'] = $genreList[$genre];
-                }
-            }
+            $movies = $this->formatMovieList($movies);
             
-            return $movieList;
+            return $movies;
 
         }  catch (\Exception $e) {
             throw $e;
@@ -101,8 +83,6 @@ class MovieService
     {
         try {
 
-            $genreList = $this->getGenreDictionary();
-
             $url = env('TMDB_API');
 
             $endpoint = $url . "/search/movie";
@@ -117,25 +97,9 @@ class MovieService
             
             $movies = json_decode($response->getBody(), true);
 
-            $movieList = [];
+            $movies = $this->formatMovieList($movies);
 
-            foreach ($movies['results'] as $i => $movie) {
-                $movieList[$i] = [];
-
-                $movieList[$i]['id'] = $movie['id'];
-                $movieList[$i]['title'] = $movie['title'];
-                $movieList[$i]['release_date'] = $movie['release_date'];
-                $movieList[$i]['poster_path'] = $movie['poster_path'];
-                $movieList[$i]['backdrop_path'] = $movie['backdrop_path']; 
-
-                foreach ($movie['genre_ids'] as $j => $genre) {
-
-                    $movieList[$i]['genres'][$j]['id'] = $genre;
-                    $movieList[$i]['genres'][$j]['name'] = $genreList[$genre];
-                }
-            }
-            
-            return $movieList;
+            return $movies;
 
         }  catch (\Exception $e) {
             throw $e;
@@ -175,5 +139,30 @@ class MovieService
         }  catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function formatMovieList($movies)
+    {
+        $genreList = $this->getGenreDictionary();
+
+        $movieList = [];
+
+        foreach ($movies['results'] as $i => $movie) {
+            $movieList[$i] = [];
+
+            $movieList[$i]['id'] = $movie['id'];
+            $movieList[$i]['title'] = $movie['title'];
+            $movieList[$i]['release_date'] = $movie['release_date'];
+            $movieList[$i]['poster_path'] = $movie['poster_path'];
+            $movieList[$i]['backdrop_path'] = $movie['backdrop_path']; 
+
+            foreach ($movie['genre_ids'] as $j => $genre) {
+
+                $movieList[$i]['genres'][$j]['id'] = $genre;
+                $movieList[$i]['genres'][$j]['name'] = $genreList[$genre];
+            }
+        }
+        
+        return $movieList;
     }
 }
