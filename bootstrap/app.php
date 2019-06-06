@@ -26,6 +26,10 @@ $app = new Laravel\Lumen\Application(
 //enabling eloquent ORM
 $app->withEloquent();
 
+//ading CORS support
+$app->configure('cors');
+$app->register(Barryvdh\Cors\ServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -58,9 +62,9 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    \Barryvdh\Cors\HandleCors::class
+]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
