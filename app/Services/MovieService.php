@@ -175,7 +175,7 @@ class MovieService
             $movie['title'] = $movieResponse['title'];
             $movie['release_date'] = $movieResponse['release_date'];
             $movie['overview'] = $movieResponse['overview'];
-            $movie['poster_path'] = $movieResponse['poster_path'];
+            $movie['poster_path'] = env('TMDB_IMG_PATH') . $movieResponse['poster_path'];
             $movie['genres'] = $movieResponse['genres'];
             
             return $movie;
@@ -209,8 +209,8 @@ class MovieService
             $movieList[$i]['id'] = $movie['id'];
             $movieList[$i]['title'] = $movie['title'];
             $movieList[$i]['release_date'] = $movie['release_date'];
-            $movieList[$i]['poster_path'] = $movie['poster_path'];
-            $movieList[$i]['backdrop_path'] = $movie['backdrop_path']; 
+            $movieList[$i]['poster_path'] = env('TMDB_IMG_PATH') . $movie['poster_path'];
+            $movieList[$i]['backdrop_path'] = env('TMDB_IMG_PATH') . $movie['backdrop_path']; 
 
             foreach ($movie['genre_ids'] as $j => $genre) {
 
