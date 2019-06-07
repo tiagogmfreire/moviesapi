@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\GetGenres::class
+        Commands\GetGenres::class,
+        Commands\GetMovies::class
     ];
 
     /**

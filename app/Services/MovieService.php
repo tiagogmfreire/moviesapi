@@ -5,6 +5,7 @@ namespace App\Services;
 use \GuzzleHttp\Client;
 use function GuzzleHttp\json_decode;
 use App\GenreModel;
+use App\MovieModel;
 
 /**
  * Service class to abstract logic regarding retrieving movie information
@@ -220,6 +221,7 @@ class MovieService
 
             $movieList[$i]['id'] = $movie['id'];
             $movieList[$i]['title'] = $movie['title'];
+            $movieList[$i]['overview'] = $movie['overview'];
             $movieList[$i]['release_date'] = $movie['release_date'];
             $movieList[$i]['poster_path'] = env('TMDB_IMG_PATH') . $movie['poster_path'];
             $movieList[$i]['backdrop_path'] = env('TMDB_IMG_PATH') . $movie['backdrop_path']; 
@@ -252,6 +254,33 @@ class MovieService
             $genreModel->name = $genre['name'];
 
             $genreModel->save();
+        }
+    }
+
+    public function saveMovies()
+    {
+        $this->saveGenres();
+
+        $movies = $this->upcoming(1,3);
+
+        foreach ($movies as $movie) {
+
+            $movieModel = MovieModel::where('tmbd_id', $movie['id'])->first();
+
+            if (empty($movieModel)) {
+                $movieModel = new MovieModel();
+
+                $movieModel->tmbd_id = $movie['id'];
+            }
+
+            $movieModel->title = $movie['title'];
+            $movieModel->overview = $movie['overview'];
+            $movieModel->poster_path = $movie['poster_path'];
+            $movieModel->backdrop_path = $movie['backdrop_path'];
+            $movieModel->release_date = $movie['release_date'];
+            //$movieModel->release_date = \Datetime::createFromFormat('Y-m-d',$movie['release_date']);
+
+            $movieModel->save();
         }
     }
 }
