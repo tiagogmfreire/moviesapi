@@ -53,7 +53,7 @@ class MovieController extends Controller
     {
         try {
 
-            $movie = $movieService->getDetails($id);
+            $movie = $movieService->getMovieDetails($id);
         
             return response()->json($movie);
 

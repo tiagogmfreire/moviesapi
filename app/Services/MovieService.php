@@ -327,4 +327,13 @@ class MovieService
 
         return $movies;
     }
+
+    public function getMovieDetails($id)
+    {
+        $movie = MovieModel::with('genres')
+                            ->where('id', $id)
+                            ->first();
+
+        return $movie;
+    }
 }
