@@ -1,21 +1,50 @@
-# Lumen PHP Framework
+# Upcoming movies API
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+https://movies.tiagofreire.dev
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+The API was built using PHP 7.2 and Laravel's micro framework: Lumen 5.8.
 
-## Official Documentation
+The eloquent and facade features have been enabled.
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+It uses the Flipbox\LumenGenerator package installed via the composer package manager to provide all the php artisan command line tooling avaible in the full Laravel framework.
 
-## Security Vulnerabilities
+It also uses the Guzzle, PHP HTTP client library to make requests do the TMBd's API. Guzzle requires the symfony/psr-http-message-bridge composer package to function properly.
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+The barryvdh/laravel-cors composer package has been added to provide CORS headers in the requests so the frontend client and the backend API could be deployed in different domains. 
 
-## License
+This API uses the The Movie Database API version 3 to gather information about upcoming movie titles.
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+It has methods mapped to the TMBd's API endpoints that return upcoming movies, movie gender list, search results and details about a movie.
+
+But those methods are only used internally to gather data of the upcoming movies (100 of them at the moment) and save that information in a local PostgreSQL database.
+
+By doing that the frontend client is not limited by the TMDb's rate limit and the API can work reliably even if the external API is offline.
+
+Because of this the endpoints provided to the frontend app only return information about the movies stored locally.
+
+The database tables were made using database migrations provided by the php artisan migrate tool.
+
+Only three tables where needed to store movie and genre data.
+
+The logic to store the data of the upcoming movies is avaible in two custom php artisan commands:
+
+> movie:getgenres
+
+Saves the information about movie genres and:
+
+> movie:getmovies
+
+Saves information of the next 100 upcoming movies by calling the TMDb's API 5 times (pages 1 to 5)
+
+At the momment this process is manual. But Laravel/Lumen artisan commands can be schedulled using the task scheduller and a linux cronjob so the updating of the data can be done automatically whithout changes in the codebase.
+
+The architeture is simple and only relies on 1 controller class, 1 service class , 3 model classes and 2 more classes for the php artisan commands.
+
+There are 3 endpoints:
+
+- /movie/upcoming To show the upcoming movies
+- /movie/{id} to show the details of a movie
+- movie/search?title={title} to search for a movie
+
+
+
