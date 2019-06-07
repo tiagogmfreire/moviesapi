@@ -26,12 +26,14 @@ class MovieController extends Controller
     {
         try {
 
-            $page = $request->input('page');
+            $startPage = $request->input('start');
+            $endPage = $request->input('end');
 
             //setting 1 as the default value using php null coalesce operator (php 7.x)
-            $page = $page ?? 1;
+            $startPage = $startPage ?? 1;
+            $endPage = $endPage ?? 3;
 
-            $movies = $movieService->upcoming($page);
+            $movies = $movieService->upcoming($startPage, $endPage);
 
             return response()->json($movies);
 

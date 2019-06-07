@@ -14,16 +14,20 @@ class MovieService
     /**
      * Method to get a list of the upcoming movies. 
      * 
-     * It uses the /movie/upcoming endpoint of the TMDb API.
+     * Uses the /movie/upcoming endpoint of the TMDb API.
      * 
-     * The response of the service is passed is decoded from json and passed as an array 
+     * The $startPage and $endPage are used to call the TMBd endpoint several
+     * times and combine the returned values
+     * 
+     * The response of the service is decoded from json and passed as an array 
      * to the formatMovieList() method to rearrange the array containing the movie objects.
      *
-     * @param integer $page (optional)The page number. Default: 1.
+     * @param integer $startPage    (optional)The first page number. Default: 1.
+     * @param integer $endPage      (optional)The last page number. Default: 3.
      * 
      * @return array  an array containg the movies found
      */
-    public function upcoming($page = 1)
+    public function upcoming($startPage = 1, $endPage = 3)
     {
         try {
 
@@ -31,19 +35,26 @@ class MovieService
 
             $endpoint = $url . "/movie/upcoming";
             $client = new Client();
-            
-            $response = $client->request('GET', $endpoint, ['query' => [
-                'api_key' => env('TMDB_KEY'),
-                'page' => $page,
-            ]]);
 
-            $statusCode = $response->getStatusCode();
-            
-            $movies = json_decode($response->getBody(), true);
+            $moviesList = [];
 
-            $movies = $this->formatMovieList($movies);
-            
-            return $movies;
+            for ($i = $startPage; $i <= $endPage; $i++) {
+
+                $response = $client->request('GET', $endpoint, ['query' => [
+                    'api_key' => env('TMDB_KEY'),
+                    'page' => $i,
+                ]]);
+    
+                $statusCode = $response->getStatusCode();
+                
+                $movies = json_decode($response->getBody(), true);
+    
+                $movies = $this->formatMovieList($movies);
+
+                array_push($moviesList, ...$movies);
+            }
+
+            return $moviesList;
 
         }  catch (\Exception $e) {
             throw $e;
