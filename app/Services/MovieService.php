@@ -272,7 +272,7 @@ class MovieService
     {
         $this->saveGenres();
 
-        $movies = $this->upcoming(1,3);
+        $movies = $this->upcoming(1,5);
 
         foreach ($movies as $movie) {
 
