@@ -237,6 +237,11 @@ class MovieService
         return $movieList;
     }
 
+    /**
+     * Method to store locally movie genres data retrieved from the movie database api
+     *
+     * @return void
+     */
     public function saveGenres()
     {
         $genres = $this->genres();
@@ -258,6 +263,11 @@ class MovieService
         }
     }
 
+    /**
+     * Method to store locally movie data retrieved from the movie database api
+     *
+     * @return void
+     */
     public function saveMovies()
     {
         $this->saveGenres();
@@ -307,6 +317,11 @@ class MovieService
         }
     }
 
+    /**
+     * Method to list the upcoming movies from the local database.
+     *
+     * @return array
+     */
     public function getUpcomingMovies()
     {
         $movies = MovieModel::with('genres')->get();
@@ -319,6 +334,13 @@ class MovieService
         return $movies;
     }
 
+    /**
+     * Method to search for a movie in the local database
+     *
+     * @param string $title String containg the title of the movie for the search
+     * 
+     * @return MovieModel 
+     */
     public function searchMovies($title)
     {
         //using raw where to make a case insentive text comparison. mb_string is used to deal with unicode properly
@@ -328,6 +350,13 @@ class MovieService
         return $movies;
     }
 
+    /**
+     * Method to get the details of a movie in the local database
+     *
+     * @param int $id the id of the movie (from the local database)
+     * 
+     * @return MovieModel
+     */
     public function getMovieDetails($id)
     {
         $movie = MovieModel::with('genres')
