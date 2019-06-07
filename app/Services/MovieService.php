@@ -306,4 +306,16 @@ class MovieService
 
         }
     }
+
+    public function getUpcomingMovies()
+    {
+        $movies = MovieModel::with('genres')->get();
+
+        foreach ($movies as $i => $movie) {
+
+            $movie->genres = $movie->genres();
+        }
+
+        return $movies;
+    }
 }

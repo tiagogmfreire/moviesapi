@@ -26,20 +26,13 @@ class MovieController extends Controller
     {
         try {
 
-            $startPage = $request->input('start');
-            $endPage = $request->input('end');
-
-            //setting 1 as the default value using php null coalesce operator (php 7.x)
-            $startPage = $startPage ?? 1;
-            $endPage = $endPage ?? 3;
-
-            $movies = $movieService->upcoming($startPage, $endPage);
+            $movies = $movieService->getUpcomingMovies();
 
             return response()->json($movies);
 
         } catch (\Exception $e) {
-            
-            return response()->json('An error has ocorred while processing your request', 500);
+            throw $e;
+            //return response()->json('An error has ocorred while processing your request', 500);
         }
     }
 

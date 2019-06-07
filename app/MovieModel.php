@@ -13,4 +13,9 @@ class MovieModel extends Model
     protected $fillable = array('*');
     protected $guarded = ['id'];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function genres()
+    {
+        return $this->belongsToMany('App\GenreModel', 'movie_genre', 'movie_id', 'genre_id');        
+    }
 }
