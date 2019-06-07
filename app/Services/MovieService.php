@@ -6,6 +6,7 @@ use \GuzzleHttp\Client;
 use function GuzzleHttp\json_decode;
 use App\GenreModel;
 use App\MovieModel;
+use App\MovieGenreModel;
 
 /**
  * Service class to abstract logic regarding retrieving movie information
@@ -278,9 +279,31 @@ class MovieService
             $movieModel->poster_path = $movie['poster_path'];
             $movieModel->backdrop_path = $movie['backdrop_path'];
             $movieModel->release_date = $movie['release_date'];
-            //$movieModel->release_date = \Datetime::createFromFormat('Y-m-d',$movie['release_date']);
-
+            
             $movieModel->save();
+
+            //saving the movies genres
+            foreach ($movie['genres'] as $genre) {
+
+                $genreModel = GenreModel::where('tmbd_id', $genre['id'])->first();
+
+                //checking if the genre has been saved before 
+                $movieGenreModel = MovieGenreModel::where('movie_id', $movieModel->id)
+                                                    ->where('genre_id', $genreModel->id)
+                                                    ->first();
+
+                //if not then save it
+                if (empty($movieGenreModel)) {
+                    $movieGenreModel = new MovieGenreModel();
+
+                    $movieGenreModel->movie_id = $movieModel->id;
+                    $movieGenreModel->genre_id = $genreModel->id;
+
+                    $movieGenreModel->save();
+                }
+
+            }
+
         }
     }
 }
