@@ -4,6 +4,7 @@ namespace App\Services;
 
 use \GuzzleHttp\Client;
 use function GuzzleHttp\json_decode;
+use App\GenreModel;
 
 /**
  * Service class to abstract logic regarding retrieving movie information
@@ -231,5 +232,26 @@ class MovieService
         }
         
         return $movieList;
+    }
+
+    public function saveGenres()
+    {
+        $genres = $this->genres();
+
+        foreach ($genres as $genre) {
+
+            //checking if the genre has been saved before
+            $genreModel = GenreModel::where('tmbd_id', $genre['id'])->first();
+
+            if (empty($genreModel)) {
+                $genreModel = new GenreModel();
+
+                $genreModel->tmbd_id = $genre['id'];
+            }
+
+            $genreModel->name = $genre['name'];
+
+            $genreModel->save();
+        }
     }
 }
