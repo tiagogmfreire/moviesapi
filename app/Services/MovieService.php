@@ -318,4 +318,13 @@ class MovieService
 
         return $movies;
     }
+
+    public function searchMovies($title)
+    {
+        //using raw where to make a case insentive text comparison. mb_string is used to deal with unicode properly
+        $movies = MovieModel::whereRaw("UPPER(title) LIKE '%". mb_strtoupper($title, 'UTF-8')."%'")
+                            ->get();
+
+        return $movies;
+    }
 }
