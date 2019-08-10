@@ -11,6 +11,12 @@
 |
 */
 
-$router->get('/', function () use ($router) {
+$router
+->get('/', function () use ($router) {
     return $router->app->version();
-});
+})
+//the endpoints of the API
+->get('/movie/upcoming',['uses' => 'MovieController@upcoming'])
+->get('/movie/search',['uses' => 'MovieController@search'])
+->get('/movie/{id}',['uses' => 'MovieController@movie'])
+;
