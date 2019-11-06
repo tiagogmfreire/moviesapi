@@ -293,27 +293,28 @@ class MovieService
             $movieModel->save();
 
             //saving the movies genres
-            foreach ($movie['genres'] as $genre) {
+            if(isset($movie['genres'])) {
+                foreach ($movie['genres'] as $genre) {
 
-                $genreModel = GenreModel::where('tmbd_id', $genre['id'])->first();
-
-                //checking if the genre has been saved before 
-                $movieGenreModel = MovieGenreModel::where('movie_id', $movieModel->id)
-                                                    ->where('genre_id', $genreModel->id)
-                                                    ->first();
-
-                //if not then save it
-                if (empty($movieGenreModel)) {
-                    $movieGenreModel = new MovieGenreModel();
-
-                    $movieGenreModel->movie_id = $movieModel->id;
-                    $movieGenreModel->genre_id = $genreModel->id;
-
-                    $movieGenreModel->save();
+                    $genreModel = GenreModel::where('tmbd_id', $genre['id'])->first();
+    
+                    //checking if the genre has been saved before 
+                    $movieGenreModel = MovieGenreModel::where('movie_id', $movieModel->id)
+                                                        ->where('genre_id', $genreModel->id)
+                                                        ->first();
+    
+                    //if not then save it
+                    if (empty($movieGenreModel)) {
+                        $movieGenreModel = new MovieGenreModel();
+    
+                        $movieGenreModel->movie_id = $movieModel->id;
+                        $movieGenreModel->genre_id = $genreModel->id;
+    
+                        $movieGenreModel->save();
+                    }
+    
                 }
-
             }
-
         }
     }
 
