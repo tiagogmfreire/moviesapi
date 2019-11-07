@@ -7,7 +7,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update && apt-get install -y \ 
     git \
     zip \
-    unzip
+    unzip \
+    libpq-dev
+
+# https://github.com/docker-library/php/issues/221
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    pgsql
 
 # Apache configuration
 RUN echo "ServerName laravel-app.local" >> /etc/apache2/apache2.conf
